@@ -22,6 +22,14 @@ public:
         this_thread::sleep_for(chrono::milliseconds(2000));
         return a + b;
     }
+
+    void DoWork2() {
+        this_thread::sleep_for(chrono::milliseconds(5000));
+        std::cout << "flow number" << this_thread::get_id() << "\t START DoWork2" << std::endl;
+        this_thread::sleep_for(chrono::milliseconds(2000));
+        std::cout << "flow number" << this_thread::get_id() << "\t STOP DoWork2" << std::endl;
+        this_thread::sleep_for(chrono::milliseconds(4000));
+    }
 };
 
 
@@ -31,8 +39,9 @@ int main() {
     auto f = [&](int a = 5, int b = 12) {result = m.Sum(a, b); };
     thread th(f);
     thread t([&]() {m.DoWork(); });
+    thread thr([&]() {m.DoWork2(); });
     // cout << Sum(5,6)<<endl;
-
+      
     for (size_t i = 0; i < 20; i++) {
         cout << "flow number" << this_thread::get_id() << "\t iteration number " << i << "\n";
         this_thread::sleep_for(chrono::milliseconds(500));
@@ -40,6 +49,7 @@ int main() {
 
     th.join();
     t.join();
+    thr.join();
 
     std::cout << result << std::endl;
     return 0;
